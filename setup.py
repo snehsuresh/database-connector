@@ -20,7 +20,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 __version__ = "0.0.4"
 REPO_NAME = "database-connector" 
-PKG_NAME= "Database-Connect" #for pypi 
+PKG_NAME= "databaseconnector" #for pypi 
 AUTHOR_USER_NAME = "snehsuresh"  
 AUTHOR_EMAIL = "snehsuresh02@gmail.com" 
 
