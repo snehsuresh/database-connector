@@ -3,7 +3,8 @@ pymongo[srv]
 dnspython
 pandas
 numpy
-ensure
+ensure #
+pytest
 
 
 # dev requirements -

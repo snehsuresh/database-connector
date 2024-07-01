@@ -7,8 +7,8 @@ list_of_files=[
 
     ".github/workflows/ci.yaml",
     "src/__init__.py",
-    f"src/{package_name}/__init__.py",
-    f"src/{package_name}/mongo_crud.py"
+    f"src/{package_name}/__init__.py", 
+    f"src/{package_name}/mongo_crud.py", 
     "src/components/__init__.py",
     "tests/unit/__init__.py",
     "tests/unit/unit.py",
