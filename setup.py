@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages #
 from typing import List
+import os
 
 
 HYPHEN_E_DOT = '-e .'
@@ -13,10 +14,13 @@ def get_requirements(file_path: str) -> List[str]:
         requirements.remove(HYPHEN_E_DOT)
     return requirements
 
+# Get the directory where the setup.py file is located
+this_directory = os.path.abspath(os.path.dirname(__file__))
 
-with open('README.md', 'r', encoding='utf-8') as f:
-    long_description = f.read()     
-   
+# Open the README.md file relative to the setup.py file location
+with open(os.path.join(this_directory, 'README.md'), 'r', encoding='utf-8') as f:
+    long_description = f.read()
+
 
 __version__ = "0.0.4"
 REPO_NAME = "database-connector" 
