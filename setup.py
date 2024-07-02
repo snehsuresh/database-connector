@@ -24,7 +24,7 @@ with open(os.path.join(this_directory, 'README.md'), 'r', encoding='utf-8') as f
 
 __version__ = "0.0.4"
 REPO_NAME = "database-connector" 
-PKG_NAME= "alldatabaseconnector" #for pypi 
+PKG_NAME= "dbLinkPro" #for pypi 
 AUTHOR_USER_NAME = "snehsuresh"  
 AUTHOR_EMAIL = "snehsuresh02@gmail.com" 
 
