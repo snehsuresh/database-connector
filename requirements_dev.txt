@@ -4,6 +4,7 @@ dnspython
 pandas
 numpy
 ensure
+mysql-connector-python>=8.0.0
 
 
 # dev requirements -

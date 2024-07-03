@@ -5,5 +5,6 @@ pandas
 numpy
 ensure
 pytest
+mysql-connector-python>=8.0.0
 
 -e .
