@@ -37,7 +37,7 @@ class MySQLConnection:
 
     def disconnect(self):
         try:
-            if self.__connection.is_connected():
+            if self.__connection and self.__connection.is_connected():
                 self.__cursor.close()
                 self.__connection.close()
         except mysql.connector.Error as err:
