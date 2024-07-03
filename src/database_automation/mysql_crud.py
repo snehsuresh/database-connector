@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
-from typing import Optional
+from typing import Optional, Any, List, Dict
+
 
 class MySQLConnection:
     def __init__(self, host: str, user: str, password: str, database: str = None, port: int = 3306):
@@ -12,7 +13,7 @@ class MySQLConnection:
         self.__connection: Optional[mysql.connector.MySQLConnection] = None
         self.__cursor: Optional[mysql.connector.cursor.MySQLCursor] = None
 
-    def connect(self):
+    def connect(self) -> None:
         try:
             self.__connection = mysql.connector.connect(
                 host=self.__host,
@@ -36,15 +37,16 @@ class MySQLConnection:
             else:
                 raise Exception(f"Error connecting to the database: {err}")
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         try:
             if self.__connection and self.__connection.is_connected():
-                self.__cursor.close()
+                if self.__cursor:
+                    self.__cursor.close()
                 self.__connection.close()
         except mysql.connector.Error as err:
             raise Exception(f"Error disconnecting from the database: {err}")
 
-    def create_database(self):
+    def create_database(self) -> None:
         try:
             temp_connection = mysql.connector.connect(
                 host=self.__host,
@@ -59,65 +61,74 @@ class MySQLConnection:
         except mysql.connector.Error as err:
             raise Exception(f"Failed to create database: {err}")
 
-    def create_table(self, table_name: str, columns: dict):
+    def create_table(self, table_name: str, columns: Dict[str, str]) -> None:
         try:
             self.connect()
-            columns_str = ', '.join([f'{col} {data_type}' for col, data_type in columns.items()])
-            create_table_query = f'CREATE TABLE {table_name} ({columns_str})'
-            self.__cursor.execute(create_table_query)
-            self.__connection.commit()
+            if self.__cursor:
+                columns_str = ', '.join([f'{col} {data_type}' for col, data_type in columns.items()])
+                create_table_query = f'CREATE TABLE {table_name} ({columns_str})'
+                self.__cursor.execute(create_table_query)
+                if self.__connection:
+                    self.__connection.commit()
         except mysql.connector.Error as err:
             raise Exception(f"Failed to create table: {err}")
         finally:
             self.disconnect()
 
-    def insert_record(self, table_name: str, record: dict):
+    def insert_record(self, table_name: str, record: Dict[str, Any]) -> None:
         try:
             self.connect()
-            columns = ', '.join(record.keys())
-            values = tuple(record.values())
-            placeholders = ', '.join(['%s'] * len(record))
-            insert_query = f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})'
-            self.__cursor.execute(insert_query, values)
-            self.__connection.commit()
+            if self.__cursor:
+                columns = ', '.join(record.keys())
+                values = tuple(record.values())
+                placeholders = ', '.join(['%s'] * len(record))
+                insert_query = f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})'
+                self.__cursor.execute(insert_query, values)
+                if self.__connection:
+                    self.__connection.commit()
         except mysql.connector.Error as err:
             raise Exception(f"Failed to insert record: {err}")
         finally:
             self.disconnect()
 
-    def select_record(self, table_name: str, conditions: str = None):
+    def select_record(self, table_name: str, conditions: str = None) -> List[Dict[str, Any]]:
         try:
             self.connect()
-            select_query = f'SELECT * FROM {table_name}'
-            if conditions:
-                select_query += f' WHERE {conditions}'
-            self.__cursor.execute(select_query)
-            records = self.__cursor.fetchall()
-            return records
+            if self.__cursor:
+                select_query = f'SELECT * FROM {table_name}'
+                if conditions:
+                    select_query += f' WHERE {conditions}'
+                self.__cursor.execute(select_query)
+                records = self.__cursor.fetchall()
+                return records
         except mysql.connector.Error as err:
             raise Exception(f"Failed to select record: {err}")
         finally:
             self.disconnect()
 
-    def update_record(self, table_name: str, record: dict, conditions: str):
+    def update_record(self, table_name: str, record: Dict[str, Any], conditions: str) -> None:
         try:
             self.connect()
-            set_clause = ', '.join([f'{key}=%s' for key in record.keys()])
-            values = tuple(record.values())
-            update_query = f'UPDATE {table_name} SET {set_clause} WHERE {conditions}'
-            self.__cursor.execute(update_query, values)
-            self.__connection.commit()
+            if self.__cursor:
+                set_clause = ', '.join([f'{key}=%s' for key in record.keys()])
+                values = tuple(record.values())
+                update_query = f'UPDATE {table_name} SET {set_clause} WHERE {conditions}'
+                self.__cursor.execute(update_query, values)
+                if self.__connection:
+                    self.__connection.commit()
         except mysql.connector.Error as err:
             raise Exception(f"Failed to update record: {err}")
         finally:
             self.disconnect()
 
-    def delete_record(self, table_name: str, conditions: str):
+    def delete_record(self, table_name: str, conditions: str) -> None:
         try:
             self.connect()
-            delete_query = f'DELETE FROM {table_name} WHERE {conditions}'
-            self.__cursor.execute(delete_query)
-            self.__connection.commit()
+            if self.__cursor:
+                delete_query = f'DELETE FROM {table_name} WHERE {conditions}'
+                self.__cursor.execute(delete_query)
+                if self.__connection:
+                    self.__connection.commit()
         except mysql.connector.Error as err:
             raise Exception(f"Failed to delete record: {err}")
         finally:
