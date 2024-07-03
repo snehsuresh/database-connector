@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import errorcode
+from typing import Optional
 
 class MySQLConnection:
     def __init__(self, host: str, user: str, password: str, database: str = None, port: int = 3306):
@@ -8,8 +9,8 @@ class MySQLConnection:
         self.__password = password
         self.__database = database
         self.__port = port
-        self.__connection = None
-        self.__cursor = None
+        self.__connection: Optional[mysql.connector.MySQLConnection] = None
+        self.__cursor: Optional[mysql.connector.cursor.MySQLCursor] = None
 
     def connect(self):
         try:
