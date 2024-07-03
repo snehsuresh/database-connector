@@ -42,7 +42,7 @@ class MySQLConnection:
                 if self.__cursor:
                     self.__cursor.close()
                 if self.__connection:
-                    self.__connection.close()
+                    self.__connection.close() # type: ignore
         except mysql.connector.Error as err:
             raise Exception(f"Error disconnecting from the database: {err}")
 
@@ -59,7 +59,7 @@ class MySQLConnection:
                 temp_cursor.execute(f"CREATE DATABASE {self.__database}")
                 temp_cursor.close()
             if temp_connection:
-                temp_connection.close()
+                temp_connection.close() # type: ignore
         except mysql.connector.Error as err:
             raise Exception(f"Failed to create database: {err}")
 
