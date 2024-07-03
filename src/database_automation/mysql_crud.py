@@ -43,9 +43,8 @@ class MySQLConnection:
         except mysql.connector.Error as err:
             raise Exception(f"Error disconnecting from the database: {err}")
 
-    def create_database(self, database: str = None):
+    def create_database(self):
         try:
-            if database: self.__database = database
             temp_connection = mysql.connector.connect(
                 host=self.__host,
                 user=self.__user,
