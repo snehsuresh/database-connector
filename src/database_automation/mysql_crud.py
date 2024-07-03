@@ -1,6 +1,6 @@
 import mysql.connector
 from mysql.connector import errorcode
-from typing import Optional, Any, List, Dict
+from typing import Optional, Any, List, Dict, Union
 
 class MySQLConnection:
     def __init__(self, host: str, user: str, password: str, database: str = None, port: int = 3306):
@@ -9,7 +9,7 @@ class MySQLConnection:
         self.__password = password
         self.__database = database
         self.__port = port
-        self.__connection: Optional[mysql.connector.MySQLConnection] = None
+        self.__connection: Optional[Union[mysql.connector.CMySQLConnection, mysql.connector.MySQLConnection]] = None
         self.__cursor: Optional[mysql.connector.cursor.MySQLCursor] = None
 
     def connect(self) -> None:
@@ -97,7 +97,7 @@ class MySQLConnection:
                     select_query += f' WHERE {conditions}'
                 self.__cursor.execute(select_query)
                 records = self.__cursor.fetchall()
-                return records
+                return [list(record) for record in records]  # Convert tuple to list
             return []
         except mysql.connector.Error as err:
             raise Exception(f"Failed to select record: {err}")
