@@ -22,7 +22,7 @@ with open(os.path.join(this_directory, 'README.md'), 'r', encoding='utf-8') as f
     long_description = f.read()
 
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 REPO_NAME = "database-connector" 
 PKG_NAME= "dbLinkPro" #for pypi 
 AUTHOR_USER_NAME = "snehsuresh"  
