@@ -9,8 +9,8 @@ class MySQLConnection:
         self.__password = password
         self.__database = database
         self.__port = port
-        self.__connection: Optional[Union[mysql.connector.CMySQLConnection, mysql.connector.MySQLConnection]] = None
-        self.__cursor: Optional[mysql.connector.cursor.MySQLCursor] = None
+        self.connection: Optional[Any] = None
+        self.__cursor: Optional[Any] = None
 
     def connect(self) -> None:
         try:
