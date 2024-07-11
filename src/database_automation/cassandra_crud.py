@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 import pandas as pd
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
@@ -87,7 +87,7 @@ class CassandraOperation:
     def use_keyspace(self, keyspace_name: str):
         self.__session.set_keyspace(keyspace_name)
     
-    def create_table(self, table_name: str, schema: dict[str, str]):
+    def create_table(self, table_name: str, schema: Dict[str, str]):
         if self.__session.keyspace:
             table = self.__session.keyspace + '.' +  table_name
             schema_str = ', '.join([f"{column} {datatype}" for column, datatype in schema.items()])
@@ -120,7 +120,7 @@ class CassandraOperation:
         else:
             raise ValueError(f"Keyspace '{keyspace_name}' does not exist.")
     
-    def insert_record(self, table_name: str, record: dict):
+    def insert_record(self, table_name: str, record: Dict):
         table = self.__session.keyspace + '.' + table_name
         columns = ', '.join(record.keys())
         values = ', '.join([f"'{value}'" if isinstance(value, str) else str(value) for value in record.values()])
@@ -143,7 +143,7 @@ class CassandraOperation:
         rows = self.__session.execute(query)
         return rows
     
-    def update_record(self, table_name: str, condition_column: str, condition_value: Any, update_values: dict):
+    def update_record(self, table_name: str, condition_column: str, condition_value: Any, update_values: Dict):
         schema = self.get_table_schema(table_name)
         
         # Check condition value format
