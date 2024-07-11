@@ -6,10 +6,6 @@ import subprocess
 import time
 
 class CassandraOperation:
-    __session = None  # Private/protected variable for session
-    __cluster = None
-    __username = None
-    __password = None
     def __init__(self, contact_points: list, volume: str ="cassandra_data"):
         self.contact_points = contact_points
         self.schema = None
