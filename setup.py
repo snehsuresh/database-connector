@@ -42,6 +42,6 @@ setup(
     },
     package_dir={"": "src"},    #package from src forlder
     packages=find_packages(where="src"),
-    install_requires=["pymongo", "pymongo[srv]", "dnspython", "pandas", "numpy", "ensure", "pytest", "mysql-connector-python"]
+    install_requires=["pymongo", "pymongo[srv]", "dnspython", "pandas", "numpy", "ensure", "pytest", "mysql-connector-python", "cassandra-driver"]
     )
 
