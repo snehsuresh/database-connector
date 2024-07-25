@@ -9,7 +9,7 @@ class MySQLConnection:
         self.__password = password
         self.__database = database
         self.__port = port
-        self.connection: Optional[Any] = None
+        self.__connection: Optional[Any] = None
         self.__cursor: Optional[Any] = None
 
     def connect(self) -> None:
@@ -68,7 +68,7 @@ class MySQLConnection:
             self.connect()
             if self.__cursor and self.__connection:
                 columns_str = ', '.join([f'{col} {data_type}' for col, data_type in columns.items()])
-                create_table_query = f'CREATE TABLE {table_name} ({columns_str})'
+                create_table_query = f'CREATE TABLE IF NOT EXISTS {table_name} ({columns_str})'
                 self.__cursor.execute(create_table_query)
                 self.__connection.commit()
         except mysql.connector.Error as err:
@@ -100,7 +100,7 @@ class MySQLConnection:
                     select_query += f' WHERE {conditions}'
                 self.__cursor.execute(select_query)
                 records = self.__cursor.fetchall()
-                return [list(record) for record in records]  # Convert tuple to list
+                return [record for record in records] #returns list of tuples
             return []
         except mysql.connector.Error as err:
             raise Exception(f"Failed to select record: {err}")
