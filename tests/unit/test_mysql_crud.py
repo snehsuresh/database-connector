@@ -7,7 +7,7 @@ import mysql.connector
 class TestMySQLConnection(unittest.TestCase):
 
     def setUp(self):
-        self.host = 'localhost'
+        self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'password'
         self.database = 'test_db'
