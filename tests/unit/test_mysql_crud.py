@@ -123,7 +123,7 @@ class TestMySQLConnection(unittest.TestCase):
         self.db_conn.create_table('test_table', {'id': 'INT', 'name': 'VARCHAR(255)'})
 
         mock_cursor.execute.assert_called_once_with(
-            'CREATE TABLE test_table (id INT, name VARCHAR(255))'
+            'CREATE TABLE IF NOT EXISTS test_table (id INT, name VARCHAR(255))'
         )
         mock_cursor.close.assert_called_once()
         mock_connection.close.assert_called_once()
