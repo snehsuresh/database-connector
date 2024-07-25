@@ -18,6 +18,15 @@ jobs:
   build:
 
     runs-on: ${{ matrix.os }}
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: "root_password"
+          MYSQL_DATABASE: "test_db"
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest] 
