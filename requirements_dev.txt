@@ -6,6 +6,7 @@ numpy
 ensure
 mysql-connector-python>=8.0.0
 cassandra-driver
+psycopg2
 
 # dev requirements -
 
