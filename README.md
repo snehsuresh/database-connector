@@ -1,48 +1,187 @@
-# requirements_dev.txt we use for the testing
-It makes it easier to install and manage dependencies for development and testing, separate from the dependencies required for production.
+# dbLinkPro
 
-# difference between requirements_dev.txt and requirements.txt
+`dbLinkPro` is a versatile Python package designed to simplify database interactions by offering a unified interface for performing CRUD (Create, Read, Update, Delete) operations across Cassandra, MongoDB, and MySQL databases. This package not only supports essential database operations but also enhances the user experience with additional features specific to each database type.
 
-requirements.txt is used to specify the dependencies required to run the production code of a Python project, while requirements_dev.txt is used to specify the dependencies required for development and testing purposes.
+## Features
 
-# tox.ini
-We use if for the testing in the python package testing against different version of the python 
+### Cassandra-Specific Enhancements
 
-## how tox works tox enviornment creation
-1. Install depedencies and packages 
-2. Run commands
-3. Its a combination of the (virtualenvwrapper and makefile)
-4. It creates a .tox
+- **Docker Integration**: Automatically starts a Cassandra Docker container if it's not running. Handles container creation, volume management, and startup checks.
+- **Connection Timeout Handling**: Implements retry logic to handle connection delays, ensuring that Cassandra is fully operational before proceeding.
+- **Keyspace and Table Management**: Create and manage keyspaces and tables with flexible schema definitions. Switch between keyspaces easily.
+- **Schema Retrieval**: Retrieve and validate table schemas, including checking the compatibility of data types for updates and deletions.
+- **Bulk Data Ingestion**: Supports bulk insertion of data from CSV and Excel files into Cassandra tables.
+- **Custom Query Handling**: Construct and execute custom queries for inserting, updating, and deleting records with validation based on schema types.
+- **Container Lifecycle Management**: Start, stop, and remove Cassandra Docker containers programmatically.
 
+## Installation
 
-# pyproject.toml
-it is being used for configuration the python project it is a alternative of the setup.cfg file. its containts configuration related to the build system
-such as the build tool used package name version author license and dependencies
+You can install `dbLinkPro` using pip:
 
-# setup.cfg
-In summary, setup.cfg is used by setuptools to configure the packaging and installation of a Python projec
+```bash
+pip install dbLinkPro
+```
 
-# Testing python application
-*types of testing*
-1. Automated testing 
-2. Manual testing
+## Usage
 
-*Mode of testing*
-1. Unit testing
-2. Integration tests
+### MySQL
+```bash
+from database_automation import mysql_crud
 
-*Testing frameworks*
+# Create a connection instance
+connection = mysql_crud.MySQLConnection(
+    host='localhost',
+    user='your_username',
+    password='your_password',
+    database='test_db',
+    port=3306
+)
 
-1. pytest
-2. unittest
-3. robotframework
-4. selenium
-5. behave
-6. doctest
+# Connect to the database
+connection.connect()
 
-# check with the code style formatting and syntax(coding standard)
+# Create a new database if it does not exist
+connection.create_database()
 
-1. pylint
-2. flake8(Contains 3 library pylint pycodestyle mccabe)
-3. pycodestyle
+# Create a new table
+columns = {
+    'id': 'INT AUTO_INCREMENT PRIMARY KEY',
+    'name': 'VARCHAR(100)',
+    'age': 'INT'
+}
+connection.create_table('person', columns)
+
+# Insert a new record
+record = {
+    'name': 'Alice',
+    'age': 28
+}
+connection.insert_record('person', record)
+
+# Query the record
+records = connection.select_record('person')
+print(records)  # Output: [[1, 'Alice', 28]]
+
+# Update the record
+update_values = {'age': 29}
+connection.update_record('person', update_values, 'name = "Alice"')
+
+# Delete the record
+connection.delete_record('person', 'name = "Alice"')
+
+# Disconnect from the database
+connection.disconnect()
+```
+
+### MongoDB
+
+```bash
+from database_automation import mongo_crud
+
+# Create an instance of MongoOperation
+mongo = mongo_crud.MongoOperation(
+    client_url='mongodb://localhost:27017/',
+    database_name='test_db',
+    collection_name='test_collection'
+)
+
+# Create a MongoDB client
+client = mongo.create_mongo_client()
+
+# Create or access the database
+database = mongo.create_database()
+
+# Create or access the collection
+collection = mongo.create_collection()
+
+# Insert a single record
+single_record = {'name': 'John Doe', 'age': 35}
+mongo.insert_record(single_record, 'test_collection')
+
+# Insert multiple records
+multiple_records = [
+    {'name': 'Jane Smith', 'age': 28},
+    {'name': 'Emily Davis', 'age': 40}
+]
+mongo.insert_record(multiple_records, 'test_collection')
+
+# Bulk insert from a CSV file
+mongo.bulk_insert('data.csv', 'test_collection')
+
+# Bulk insert from an Excel file
+mongo.bulk_insert('data.xlsx', 'test_collection')
+
+```
+
+### Cassandra
+
+```bash
+from database_automation import cassandra_crud
+
+# Create an instance of CassandraOperation
+cassandra = cassandra_crud.CassandraOperation(
+    contact_points=['127.0.0.1'],
+    volume='cassandra_data'
+)
+
+# Connect to Cassandra
+session = cassandra.connect(username='your_username', password='your_password')
+
+# Create a keyspace
+cassandra.create_keyspace('test_keyspace', strategy='SimpleStrategy', replicas=1)
+
+# Use the created keyspace
+cassandra.use_keyspace('test_keyspace')
+
+# Define table schema
+schema = {
+    'id': 'int',
+    'name': 'text',
+    'age': 'int'
+}
+
+# Create a table
+cassandra.create_table('test_table', schema)
+
+# Insert a record
+record = {'id': 1, 'name': 'John Doe', 'age': 30}
+cassandra.insert_record('test_table', record)
+
+# Bulk insert from a CSV file
+cassandra.bulk_insert('data.csv', 'test_table')
+
+# Fetch records
+rows = cassandra.fetch_records('test_table')
+for row in rows:
+    print(row)
+
+# Update a record
+update_values = {'name': 'Jane Doe', 'age': 29}
+cassandra.update_record('test_table', 'id', 1, update_values)
+
+# Delete a record
+cassandra.delete_record('test_table', 'id', 1)
+
+# Close the connection
+cassandra.close()
+
+```
+
+## Contributing
+I welcome contributions to dbLinkPro. If you'd like to contribute, please..
+
+1. Fork the repository on GitHub.
+2. Create a new branch for your changes.
+3. Make your changes and commit them with descriptive messages.
+4. Push your changes to your fork.
+5. Submit a pull request with a detailed explanation of your changes.
+
+## License
+dbLinkPro is licensed under the MIT License.
+
+## Author/Maintainer
+Sneh Pillai
+
+## Contact Information
+For support or questions, please contact: snehpillai02@gmail.com
 
