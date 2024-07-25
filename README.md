@@ -41,7 +41,7 @@ connection = mysql_crud.MySQLConnection(
 )
 ```
 
-# Connect to the database
+Connect to the database
 ```bash
 connection.connect()
 ```
