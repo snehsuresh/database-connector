@@ -20,6 +20,22 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 30 
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9"]
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.SQL_PASSWORD_ROOT }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 30s
+          --health-timeout 60s
+          --health-retries 10
 
     steps:
     - uses: actions/checkout@v3
