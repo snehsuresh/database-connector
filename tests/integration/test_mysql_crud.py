@@ -13,7 +13,7 @@ def create_test_db_connection():
     return MySQLConnection(
         host='localhost',
         user='root',  # Replace with your MySQL user
-        password='12345678',  
+        password='12345678',  # Replace with your MySQL user
         database=TEST_DB_NAME
     )
 
