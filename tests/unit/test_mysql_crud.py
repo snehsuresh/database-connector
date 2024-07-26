@@ -4,6 +4,7 @@ from database_automation.mysql_crud import MySQLConnection
 from mysql.connector import errorcode
 import mysql.connector
 
+
 class TestMySQLConnection(unittest.TestCase):
 
     def setUp(self):
@@ -189,6 +190,7 @@ class TestMySQLConnection(unittest.TestCase):
         )
         mock_cursor.close.assert_called_once()
         mock_connection.close.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()

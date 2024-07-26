@@ -5,8 +5,9 @@ from cassandra.auth import PlainTextAuthProvider
 import subprocess
 import time
 
+
 class CassandraOperation:
-    def __init__(self, contact_points: list, volume: str ="cassandra_data"):
+    def __init__(self, contact_points: list, volume: str = "cassandra_data"):
         self.contact_points = contact_points
         self.schema = None
         self.volume = volume
@@ -21,7 +22,7 @@ class CassandraOperation:
             output = subprocess.check_output(["docker", "inspect", "-f", "{{.State.Running}}", "test-cassandra-v2"], stderr=subprocess.DEVNULL)
             return output.strip() == b"true"
         except subprocess.CalledProcessError:
-            return False;
+            return False
 
     def _start_cassandra_container(self):
         try:
@@ -54,8 +55,7 @@ class CassandraOperation:
         except subprocess.CalledProcessError as e:
             print(f"Error starting Cassandra container: {e}")
             return False
-    
-    
+
     def connect(self, username=None, password=None):
         self.__username = username
         self.__password = password
@@ -79,14 +79,12 @@ class CassandraOperation:
                 time.sleep(5)  # Wait for 5 seconds before retrying
         raise RuntimeError("Cassandra did not become ready in the expected time.")
 
-
-    
     def create_keyspace(self, keyspace_name: str, strategy: str = 'SimpleStrategy', replicas: int = 1):
         self.__session.execute(f"CREATE KEYSPACE IF NOT EXISTS {keyspace_name} WITH replication = {{'class': '{strategy}', 'replication_factor' : {replicas}}};")
-    
+
     def use_keyspace(self, keyspace_name: str):
         self.__session.set_keyspace(keyspace_name)
-    
+
     def create_table(self, table_name: str, schema: Dict[str, str]):
         if self.__session.keyspace:
             table = self.__session.keyspace + '.' +  table_name
@@ -111,7 +109,7 @@ class CassandraOperation:
 
         schema = {column.name: str(column.cql_type) for column in table.columns.values()}
         return schema
-    
+
     def switch_keyspace(self, keyspace_name: str):
         if keyspace_name in self.__cluster.metadata.keyspaces:
             self.__session.set_keyspace(keyspace_name)
@@ -119,33 +117,32 @@ class CassandraOperation:
             print(f"Switched to keyspace: {keyspace_name}")
         else:
             raise ValueError(f"Keyspace '{keyspace_name}' does not exist.")
-    
+
     def insert_record(self, table_name: str, record: Dict):
         table = self.__session.keyspace + '.' + table_name
         columns = ', '.join(record.keys())
         values = ', '.join([f"'{value}'" if isinstance(value, str) else str(value) for value in record.values()])
         query = f"INSERT INTO {table} ({columns}) VALUES ({values});"
         self.__session.execute(query)
-    
+
     def bulk_insert(self, datafile: str, table_name: str):
         if datafile.endswith('.csv'):
             dataframe = pd.read_csv(datafile, encoding='utf-8')
         elif datafile.endswith(".xlsx"):
-            dataframe = pd.read_excel(datafile, encoding='utf-8')
-        
+            dataframe = pd.read_excel(datafile, encoding='utf-8')  
         for _, row in dataframe.iterrows():
             record = row.to_dict()
             print(record)
             self.insert_record(table_name, record)
-    
+
     def fetch_records(self, table_name: str):
         query = f"SELECT * FROM {table_name};"
         rows = self.__session.execute(query)
         return rows
-    
+
     def update_record(self, table_name: str, condition_column: str, condition_value: Any, update_values: Dict):
         schema = self.get_table_schema(table_name)
-        
+
         # Check condition value format
         if condition_column not in schema:
             raise ValueError(f"Condition column '{condition_column}' not found in table schema.")
@@ -167,14 +164,14 @@ class CassandraOperation:
             condition_value_str = f"'{condition_value}'"
         else:
             condition_value_str = str(condition_value)
-        
+
         query = f"UPDATE {table_name} SET {set_values} WHERE {condition_column} = {condition_value_str};"
         self.__session.execute(query)
-    
+
     def delete_record(self, table_name: str, condition_column: str, condition_value: Any):
         query = f"DELETE FROM {table_name} WHERE {condition_column} = '{condition_value}';"
         self.__session.execute(query)
-    
+
     def _is_value_valid(self, expected_type: str, value: Any) -> bool:
         # Implement your validation logic here based on expected_type and value
         # Example: Check if value matches expected_type
@@ -192,4 +189,3 @@ class CassandraOperation:
             print("Cassandra container stopped and removed.")
         except subprocess.CalledProcessError as e:
             print(f"Error stopping Cassandra container: {e}")
-
