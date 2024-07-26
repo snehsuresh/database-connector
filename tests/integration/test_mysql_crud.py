@@ -56,7 +56,7 @@ def test_create_database():
         db_conn = create_test_db_connection()
         db_conn.create_database()
 
-        mock_cursor.execute.assert_called_once_with(f"CREATE DATABASE IF NOT EXISTS {TEST_DB_NAME}")
+        mock_cursor.execute.assert_called_once_with(f"CREATE DATABASE {TEST_DB_NAME}")
 
 def test_insert_record():
     conn = create_test_db_connection()
