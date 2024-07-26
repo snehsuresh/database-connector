@@ -46,8 +46,8 @@ jobs:
         pip install -r requirements.txt
     - name: Check tox version
       run: tox --version
-    - name: Test with tox
-      run: tox
+    - name: Test with tox (linux)
+      run: tox -c tox-linux.ini
 
   windows:
     runs-on: windows-latest
@@ -69,5 +69,5 @@ jobs:
         pip install -r requirements.txt
     - name: Check tox version
       run: tox --version
-    - name: Test with tox
-      run: tox
+    - name: Test with tox (windows)
+      run: tox -c tox_windows.ini
