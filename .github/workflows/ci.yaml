@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths-ignore:
-        - 'README.md'  
+      - 'README.md'  
   pull_request:
     branches: [ "main" ]
     paths-ignore:
-        - 'README.md' 
+      - 'README.md' 
 
 permissions:
   contents: read
@@ -22,11 +22,14 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest] 
         python-version: ["3.8", "3.9"]
-    services:
+    services: 
+      # Container setup only for Linux
       mysql:
+        if: matrix.os == 'ubuntu-latest'
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: 12345678
+          MYSQL_DATABASE: test_db
         ports:
           - 3306:3306
         options: >-
@@ -49,4 +52,5 @@ jobs:
     - name: Check tox version
       run: tox --version
     - name: Test with tox
+      if: matrix.os == 'ubuntu-latest'
       run: tox
