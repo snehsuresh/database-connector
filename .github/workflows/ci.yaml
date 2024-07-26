@@ -47,7 +47,7 @@ jobs:
     - name: Check tox version
       run: tox --version
     - name: Test with tox (linux)
-      run: tox -c tox-linux.ini
+      run: tox -c tox_linux.ini
 
   windows:
     runs-on: windows-latest
