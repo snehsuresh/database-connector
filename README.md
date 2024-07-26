@@ -25,6 +25,7 @@ pip install dbLinkPro
 ## Usage
 
 ### MySQL
+
 ```bash
 from database_automation import mysql_crud
 ```
@@ -42,16 +43,19 @@ connection = mysql_crud.MySQLConnection(
 ```
 
 Connect to the database
+
 ```bash
 connection.connect()
 ```
 
 Create a new database if it does not exist
+
 ```bash
 connection.create_database()
 ```
 
 Table operations
+
 ```bash
 columns = {
     'id': 'INT AUTO_INCREMENT PRIMARY KEY',
@@ -76,6 +80,7 @@ connection.delete_record('person', 'name = "Alice"')
 ```
 
 Disconnect from the database
+
 ```bash
 connection.disconnect()
 ```
@@ -85,7 +90,9 @@ connection.disconnect()
 ```bash
 from database_automation import mongo_crud
 ```
+
 Create an instance of MongoOperation
+
 ```bash
 mongo = mongo_crud.MongoOperation(
     client_url='mongodb://localhost:27017/',
@@ -93,20 +100,27 @@ mongo = mongo_crud.MongoOperation(
     collection_name='test_collection'
 )
 ```
+
 Create a MongoDB client
+
 ```bash
 client = mongo.create_mongo_client()
 ```
+
 Create or access the database
+
 ```bash
 database = mongo.create_database()
 ```
+
 Create or access the collection
+
 ```bash
 collection = mongo.create_collection()
 ```
 
 CRUD operations
+
 ```bash
 single_record = {'name': 'John Doe', 'age': 35}
 mongo.insert_record(single_record, 'test_collection')
@@ -130,6 +144,7 @@ from database_automation import cassandra_crud
 ```
 
 Create an instance of CassandraOperation
+
 ```bash
 cassandra = cassandra_crud.CassandraOperation(
     contact_points=['127.0.0.1'],
@@ -144,16 +159,19 @@ session = cassandra.connect(username='your_username', password='your_password')
 ```
 
 Create a keyspace
+
 ```bash
 cassandra.create_keyspace('test_keyspace', strategy='SimpleStrategy', replicas=1)
 ```
 
 Use the created keyspace
+
 ```bash
 cassandra.use_keyspace('test_keyspace')
 ```
 
 Define table schema
+
 ```bash
 schema = {
     'id': 'int',
@@ -163,22 +181,26 @@ schema = {
 ```
 
 Create a table
+
 ```bash
 cassandra.create_table('test_table', schema)
 ```
 
 Insert a record
+
 ```bash
 record = {'id': 1, 'name': 'John Doe', 'age': 30}
 cassandra.insert_record('test_table', record)
 ```
 
 Bulk insert from a CSV file
+
 ```bash
 cassandra.bulk_insert('data.csv', 'test_table')
 ```
 
 Fetch Records
+
 ```bash
 rows = cassandra.fetch_records('test_table')
 for row in rows:
@@ -186,22 +208,26 @@ for row in rows:
 ```
 
 Update a record
+
 ```bash
 update_values = {'name': 'Jane Doe', 'age': 29}
 cassandra.update_record('test_table', 'id', 1, update_values)
 ```
 
 Delete a record
+
 ```bash
 cassandra.delete_record('test_table', 'id', 1)
 ```
 
 Close the connection
+
 ```bash
 cassandra.close()
 ```
 
 ## Contributing
+
 I welcome contributions to dbLinkPro. If you'd like to contribute, please..
 
 1. Fork the repository on GitHub.
@@ -211,11 +237,13 @@ I welcome contributions to dbLinkPro. If you'd like to contribute, please..
 5. Submit a pull request with a detailed explanation of your changes.
 
 ## License
+
 dbLinkPro is licensed under the MIT License.
 
 ## Author/Maintainer
+
 Sneh Pillai
 
 ## Contact Information
-For support or questions, please contact: snehpillai02@gmail.com
 
+For support or questions, please contact: snehpillai02@gmail.com
