@@ -56,7 +56,7 @@ class MySQLConnection:
             )
             temp_cursor = temp_connection.cursor()
             if temp_cursor:
-                temp_cursor.execute(f"CREATE DATABASE {self.__database}")
+                temp_cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.__database}")
                 temp_cursor.close()
             if temp_connection:
                 temp_connection.close() # type: ignore
